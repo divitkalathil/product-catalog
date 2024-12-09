@@ -1,23 +1,33 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
+import ProductList from './ProductList'
 
 function App() {
-  const [count, setCount] = useState(0)
-
+  const [products, setProducts] = useState([]);
+  
+  useEffect(()=>{
+    fetch('http://localhost:8080/api/products')
+    .then(response=> response.json())
+    .then(data => setProducts(data));
+  },[]);
   return (
-    <div>
-    <button type="button" class="btn btn-primary">Primary</button>
-    <button type="button" class="btn btn-secondary">Secondary</button>
-    <button type="button" class="btn btn-success">Success</button>
-    <button type="button" class="btn btn-danger">Danger</button>
-    <button type="button" class="btn btn-warning">Warning</button>
-    <button type="button" class="btn btn-info">Info</button>
-    <button type="button" class="btn btn-light">Light</button>
-    <button type="button" class="btn btn-dark">Dark</button>
+    <div className='container'>
+      <div>
+        {products.length ? (
+          //Display Products
+          <p>
+            <ProductList products={products}/>
+          </p>
+        ):(
+          //No Products found
+          <p>
+            No Products Found
+          </p>
+        )}
+      </div>
 
-    <button type="button" class="btn btn-link">Link</button>
     </div>
   )
 }
