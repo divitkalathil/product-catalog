@@ -3,6 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 import ProductList from './ProductList'
+import CategoryFilter from './CategoryFilter'
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -35,6 +36,21 @@ function App() {
     setSortOrder(event.target.value);
   };
 
+  const filteredProducts= products
+                .filter(product=>{
+                  return (
+                    (selectedCategory?product.category.id===selectedCategory: true)
+                    && product.name.toLowerCase().includes(searchTerm.toLowerCase())
+                  )
+                }).sort((a,b)=>{
+                  if(sortOrder==='asc'){
+                    return a.price-b.price;
+                  }
+                  else{
+                    return b.price-a.price;
+                  }
+                });
+
   return (
     <div className='container'>
       <h1 className='my-4'>Product Catalog</h1>
@@ -58,10 +74,10 @@ function App() {
       </div>
 
       <div>
-        {products.length ? (
+        {filteredProducts.length ? (
           //Display Products
           <p>
-            <ProductList products={products}/>
+            <ProductList products={filteredProducts}/>
           </p>
         ):(
           //No Products found
